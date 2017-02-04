@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link type="text/css" href="css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="Scripts/angular.js"></script>
+    <script type="text/javascript" src="lib/app.js"></script>
+</head>
+<body ng-app="InsModule">
+    <div ng-controller="InsController">
+        <form ng-submit="Save()">
+            <fieldset>
+                <input type="number" placeholder="ID" ng-model="customer.Id" />
+                <br />
+                <input type="text" placeholder="Name" ng-model="customer.Name" />
+                <br />
+                <input type="date" placeholder="DOB" ng-model="customer.DOB" />
+                <br />
+                <input type="submit" placeholder="submit" />
+            </fieldset>
+        </form>
+        <p>
+            Name:{{customer.Name|uppercase}}
+            Name:{{customer.DOB|date:"fullDate"}}
+        </p>
+
+    </div>
+</body>
+</html>
