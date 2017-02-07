@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script type="text/javascript" src="Scripts/angular.js"></script>
+    <script type="text/javascript" src="JS/app.js"></script>
+
+</head>
+<body ng-app="ExcelApp">
+    <div ng-controller="ExcelCtl">
+        <input type="file" multiple onchange="angular.element(this).scope().GetFiles(this)" />
+        <input type="button" value="upload" ng-click="UploadData()" />
+    </div></body>
+</html>
+<!-- accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheettml.sheet,application/vnd.ms-excel"  -->
