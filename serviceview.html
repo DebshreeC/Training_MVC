@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="angular-ui-grid/ui-grid.css"/>
+    <link type ="text/css" href="css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="Scripts/angular.js"></script>
+    <script type="text/javascript" src="angular-ui-grid/ui-grid.js"></script>
+    <script type="text/javascript" src="Scripts/angular-animate.js"></script>
+    <script type="text/javascript" src="Scripts/angular-touch.js"></script>
+    <script type="text/javascript" src="angularscripts/constant.js"></script>
+    <script type="text/javascript" src="angularscripts/service.js"></script>   
+    <script type="text/javascript" src="angularscripts/factory.js"></script>
+    <script type="text/javascript" src="angularscripts/app.js"></script>
+</head>
+<body ng-app="HCModule">
+
+<div ng-controller="Dashboard">
+    <select ng-model="selectedValue" selected ng-change="DataChange()" ng-options="selectedValue for selectedValue in optionalData"></select>
+    <strong>Data Length:</strong>{{gridOptions.data.length|number}}
+    <br />
+    <div ng-show="flag">
+        <div id="grid1" ui-grid="gridOptions" class="ui-grid"></div>
+    </div>
+    <!--for display in table-->
+    <table class="tbl">
+        <tr>
+            <th ng-repeat="(key,value) in tableData[0]">
+                {{key}}
+            </th>
+        </tr>
+            <tr ng-repeat="obj in tableData">
+                <td ng-repeat="prop in obj ">
+                    {{prop}}
+                </td>
+            </tr>
+</table>
+    <!---->
+</div>
+
+</body>
+</html>
