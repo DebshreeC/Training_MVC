@@ -2,29 +2,38 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
-    <link rel="stylesheet" href="css/theme.blue.min.css" />
-    <link href="paging/css/vendor/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="paging/css/vendor/font-awesome.min.css" type="text/css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
-    <link href="paging/css/jquery.bdt.css" type="text/css" rel="stylesheet">
-    <link href="paging/css/style.css" type="text/css" rel="stylesheet">
-    <script type="text/javascript" src="Scripts/jquery-3.1.1.js"></script>
-    <script src="js/jquery.tablesorter.js"></script>
-
-    <script src="paging/js/vendor/bootstrap.min.js" type="text/javascript"></script>
-    <script src="paging/js/vendor/jquery.sortelements.js" type="text/javascript"></script>
-    <script src="paging/js/jquery.bdt.js" type="text/javascript"></script>
-    
-    <script type="text/javascript" src="Scripts/app.js"></script>
+    <link type="text/css" href="css/main.css" rel="stylesheet" />
+    <script type="text/javascript" src="Scripts/angular.js"></script>
+    <script type="text/javascript" src="Scripts/angular-route.js"></script>
+    <script type="text/javascript" src="JS/module.js"></script>
+    <script type="text/javascript" src="JS/userscripts.js"></script>
+    <script type="text/javascript" src="JS/posts.js"></script>
+    <script type="text/javascript" src="JS/app.js"></script>
 </head>
-<body>
-    <div class="container">
-
-        <table id="HCData" class="table table-hover">
-
-
-
+<body ng-app="RouteModule">
+    <div ng-controller="RouterCtl">
+        <table border="1">
+            <tr>
+                <th>
+                   Name
+                </th>
+                <th>
+                    Email
+                </th>
+            </tr>
+            <tr ng-repeat="obj in Result">
+                <td>
+                    <a href="#!/users/{{obj.id}}">
+                        {{obj.name}}
+                    </a>
+                </td>
+                <td>
+                    {{obj.email}}
+                </td>
+            </tr>
         </table>
     </div>
+    <div ng-view>
+        </div>
 </body>
 </html>

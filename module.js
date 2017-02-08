@@ -1,0 +1,1 @@
+﻿var routeModule = angular.module('RouteModule', ['ngRoute']);
