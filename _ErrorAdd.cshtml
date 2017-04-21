@@ -1,0 +1,66 @@
+﻿@model Denial_Coding.BAL.ViewModels.AdminModel
+@using (Html.BeginForm("", "", FormMethod.Post, new { @id = "formUpdateAccount" }))
+{
+
+    <div class="modal fade bs-example-modal-lg in" tabindex="-1" role="dialog" aria-hidden="true" style="display: block; padding-right: 17px; background: rgba(0,0,0,0.3);" id="modaleditColumn">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" tabindex="0" class="close" data-dismiss="modal" onclick="CloseModal()">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Error Details</h4>
+                </div>
+                <div class="modal-body col-md-offset-1 col-sm-offset-1 col-lg-offset-1">
+                    <div class="row" style="margin-top:1em">
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>Denial Type</label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">@Html.DropDownList("DENIAL_TYPE", new List<SelectListItem>
+                                        {new SelectListItem { Text = "OMEGA", Value = "OMEGA"},
+                                            new SelectListItem { Text = "Other", Value = "Other"},
+                                        }, new { @class = "form-control", @id = "ddldenialid", tabindex = "@(++tabindex)", @onchange = "denialtypeselect()" })</div>
+                        @*@Html.HiddenFor(x => x.TRANS_ID)*@
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>Error Category</label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">@Html.TextBoxFor(x => x.ERROR_CATEGORY, new { @class = "form-control customeSelect", tabindex = "@(++tabindex)", @id = "txterrorid" })</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CloseModal()">Close</button>
+            </div>
+
+        </div>
+    </div>
+}
+<script>
+
+   function CloseModal()
+    {
+       $('#modaleditColumn').css('display', 'none');
+   }
+
+   $('#formUpdateAccount').on('submit', function (event) {
+
+       var denial_type = $("#ddldenialid option:selected").val();
+        var error_name = $('#txterrorid').val();
+        event.preventDefault();
+        $.ajax({
+            url: '@Url.Action("SaveError")',
+            cache: false,
+            type: 'POST',
+            data: {denial_type:denial_type, error_name: error_name },
+            dataType: 'JSON',
+            beforeSend: function () {
+            },
+            success: function (data) {
+
+                CloseModal();
+                SuccessMessage('Data has been updated');
+            },
+            error: function (jXhr) {
+                alert(jXhr);
+            }
+        });
+    });
+</script>
