@@ -1,0 +1,593 @@
+﻿@model Denial_Coding.BAL.ViewModels.ImportModel
+
+@{
+    ViewBag.Title = "MasterData";
+}
+@using (Html.BeginForm("", "", FormMethod.Post, new { @id = "masterPage", @DefaultButton = "SubmitButton" }))
+{
+    <div class="x_panel">
+        <div class="x_title">
+            <h2><i class="fa fa-align-left"></i> Select Practice</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li style="float:right">
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content" id="" style="width: 70%">
+            <div class="row" style="margin-top: 1em">
+                <div class="col-md-2 col-sm-2 col-lg-2"><label>Select Practice : </label></div>
+                <div class="col-md-4 col-sm-4 col-lg-4">@Html.DropDownListFor(x => x.SelectedPractice, new SelectList(@Model.PracticeList, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlPractice", @onchange = "LoadImportInboxGrid()", tabindex = 1 })</div>
+                <div class="col-md-3 col-sm-3 col-lg-3"></div>
+                <div class="col-md-3 col-sm-3 col-lg-3"></div>
+            </div>
+
+        </div>
+    </div>
+    
+    
+    <div class="x_panel">
+        <div class="x_title">
+            <h2><i class="fa fa-align-left"></i> Add Master Data</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li style="float:right">
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content" id="" style="width: 75%">
+            <div class="modal-body col-md-offset-1 col-sm-offset-1 col-lg-offset-1">
+                <div class="row" style="margin-top:1em">
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>CLIENT ID : </label></div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                            @Html.DropDownListFor(x => x.CLIENT_ID, new SelectList(@Model.ClientList, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlclientid", tabindex = 2, @onchange = "LoadAccountName()" })
+                            @Html.ValidationMessageFor(model => model.CLIENT_ID)
+                        </div>
+                    </div>
+                    <div class ="col-md-2 col-sm-2 col-lg-2"></div>
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>ACCOUNT NAME : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            @Html.EditorFor(model => model.ACCOUNT_NAME, new { @class = "form-control", @readonly = "readonly", tabindex = 3 })
+                            @*@Html.ValidationMessageFor(model => model.ACCOUNT_NAME)*@
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-lg-1"></div>
+                </div>
+                <div class="row" style="margin-top:1em">
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>DOS : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            @*@Html.TextBoxFor(model => model.DOS, new { @class = "form-control", tabindex = "@(++tabindex)" })*@
+                            <input id="DOS" name="DOS" type="text" value="" onkeypress="return IsDate(event);" ondrop="return false;" tabindex="4"/> 
+                            @Html.ValidationMessageFor(model => model.DOS)
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-lg-1"></div>
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>ACCOUNT NO : </label></div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                            <input id="ACCOUNT_NO" name="ACCOUNT_NO" type="text" value="" onkeypress="return IsNumericonly(event);" ondrop="return false;" tabindex="5" /> 
+                            @Html.ValidationMessageFor(model => model.ACCOUNT_NO)
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2"></div>
+                </div>
+                <div class="row" style="margin-top:1em">
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>DENIAL-WORKED DATE : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            @Html.TextBoxFor(model => model.DENIAL_WORKED_DT, new { htmlAttributes = new { @class = "form-control", tabindex = 6, @readonly = "readonly", disabled = "disabled" } })
+                            @*<input id="DENIAL_WORKED_DT" name="DENIAL_WORKED_DT" type="text" readonly="readonly" disabled="disabled" value= />*@
+                            @*@Html.ValidationMessageFor(model => model.DENIAL_WORKED_DT)*@
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-lg-1"></div>
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>DENIAL TYPE : </label></div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                            @Html.DropDownList("DENIAL_TYPE", new List<SelectListItem>
+                                        { new SelectListItem { Text = "NON OMEGA", Value = "NON OMEGA"},
+                                            new SelectListItem { Text = "OMEGA", Value = "OMEGA"},
+                                            new SelectListItem { Text = "Other", Value = "Other"},
+                                        }, "--Select--", new { @class = "form-control", @id = "ddldenialid", tabindex = 7, @onchange = "denialtypeselect()" })
+                            @Html.ValidationMessageFor(model => model.DENIAL_TYPE)
+                        </div>
+                      
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2"></div>
+                </div>
+                <div class="row" style="margin-top:1em">
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>ERROR CATEGORY : </label></div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                            @Html.DropDownListFor(x => x.ERROR_CATEGORY, Enumerable.Empty<SelectListItem>(), "-- Select --", new { @class = "form-control", @id = "ddlerrorid", @onchange = "CallerrorChangefunc()", tabindex = 7 })
+                            @Html.ValidationMessageFor(model => model.ERROR_CATEGORY)
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2"></div>
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>SUB CATEGORY : </label></div>
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                            @Html.DropDownListFor(x => x.SUB_CATEGORY_Error_Type, Enumerable.Empty<SelectListItem>(), "-- Select --", new { @class = "form-control", tabindex = 8 })
+                            @Html.ValidationMessageFor(model => model.SUB_CATEGORY_Error_Type)
+                        </div>
+
+                       
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-lg-1"></div>
+                </div>
+                <div class="row" style="margin-top:1em">
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>CODER LOGIN ID : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            @*@Html.EditorFor(model => model.CODER_LOGIN_ID, new { htmlAttributes = new { @class = "form-control", tabindex = "@(++tabindex)", @onkeypress = "alert('Hello World')" } })*@
+                            <input id="CODER_LOGIN_ID" name="CODER_LOGIN_ID" type="text" value="" onchange="return onchangeevent()" onkeypress="return IsAlphaNumericonly(event);" tabindex="9" /> 
+                                @*  new { @class = "form-control", tabindex = "@(++tabindex)", onkeypress = "return onchangeevent()" }) *@
+                                @Html.ValidationMessageFor(model => model.CODER_LOGIN_ID)
+</div>                       
+                    </div>
+                     <div class ="col-md-1 col-sm-1 col-lg-1"></div>
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>QC LOGIN ID : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            <input id="QC_LOGIN_ID" name="QC_LOGIN_ID" type="text" value="" onkeypress="return IsAlphaNumericonly(event);" tabindex="10" />                           
+                            @Html.ValidationMessageFor(model => model.QC_LOGIN_ID)
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2"></div>
+                </div>
+                <div class="row" style="margin-top:1em">
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>COMMENTS : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            <textarea id="COMMENTS" name="COMMENTS" onkeypress="return IsAlphaNumericonly(event);" tabindex="11"></textarea>
+                            @Html.ValidationMessageFor(model => model.COMMENTS)
+                        </div>
+                    </div>
+                     <div class ="col-md-1 col-sm-1 col-lg-1"></div>
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>AUDITOR NAME : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            <input id="AUDITOR_NAME" name="AUDITOR_NAME" type="text" value="" onkeypress="return IsAlpha(event);" tabindex="12" />                           
+                            @Html.ValidationMessageFor(model => model.AUDITOR_NAME)
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-lg-1"></div>
+                </div>
+                <div class="row" style="margin-top:1em">
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>EMP ID : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            @Html.EditorFor(model => model.EMP_ID, new { @class = "form-control", @id = "txtEMP_ID", tabindex = 13 })
+                            @Html.ValidationMessageFor(model => model.EMP_ID)
+                        </div>
+                    </div>
+                     <div class ="col-md-1 col-sm-1 col-lg-1"></div>
+                    <div>
+                        <div class="col-md-2 col-sm-2 col-lg-2"><label>EMP NAME : </label></div>
+                        <div class="col-md-3 col-sm-3 col-lg-3">
+                            @Html.EditorFor(model => model.EMP_NAME, new { @class = "form-control", tabindex = 14 })
+                            @Html.ValidationMessageFor(model => model.EMP_NAME)
+                        </div>
+                    </div>
+                    <div class="col-md-1 col-sm-1 col-lg-1"></div>
+                </div>
+                <div class="row" style="margin-top:1em;text-align:center">
+                    <input id="btnSave" type="submit" class="btn btn-success" onclick="return formValidation();" value="Save" style="width: 12%;" tabindex="15">
+                    <input type="button" class="btn btn-default" value="Clear" style="width: 12%;" onclick="Clear();" tabindex=16 />
+                   
+                </div>
+            </div>
+        </div>        
+          </div>
+    <div class="x_content" id="ImportGridBind" style="overflow-x:scroll">
+    </div>
+}
+
+<script>
+       
+    $(document).ready(function() {
+        LoadImportInboxGrid();
+        //$('$DOC').keypress(function(key) {
+        //    if(key.charCode < 48 || key.charCode > 57) return false;
+        //});
+    });
+
+
+
+
+
+    </script>
+            <script>
+                $(document).ready(function () {
+                    $('#DENIAL_WORKED_DT').attr('disabled', 'disabled');
+                    $('#ACCOUNT_NAME').attr('disabled', 'disabled');
+                    $('#EMP_ID').attr('disabled', 'disabled');
+                    $('#EMP_NAME').attr('disabled', 'disabled');
+                });
+                
+                $(function () {
+                    CustumDatePicker('DOS');
+                    CustumDatePicker('DENIAL_WORKED_DT');
+
+                });
+                function formValidation() {
+                    
+
+                }
+
+
+
+                $('#masterPage').on('submit', function (event) {
+                   
+                    event.preventDefault();
+                    //formValidation();
+                    debugger;
+                    var PR = $("#ddlPractice option:selected").val();
+                    if (PR == '') {
+                       
+                        ErrorMessage("Please Select Practice");
+                        return false;
+                    }                 
+                    $('#DENIAL_WORKED_DT').removeAttr('disabled');
+                    $('#ACCOUNT_NAME').removeAttr('disabled');
+                    $('#EMP_ID').removeAttr('disabled');
+                    $('#EMP_NAME').removeAttr('disabled');
+
+                    //var a=$("#ACCOUNT_NAME").val()
+                    //var b = $("#DOS").val()
+                    //var c = $("#DENIAL_WORKED_DT").val()
+                    //var d = $("#CODER_LOGIN_ID").val()
+                    //var e = $("#QC_LOGIN_ID").val()
+                    //var f = $("#COMMENTS").val()
+                    //var g = $("#AUDITOR_NAME").val()
+                    //var h = $("#EMP_ID").val()
+                    //var i = $("#EMP_NAME").val()
+                    //var j = $('#ddlclientid').val()
+                    //var k = $('#ACCOUNT_NO').val()
+                    //var l = $('#ddldenialid').val()
+                   
+                    //var m = $('#ddlerrorid').val();
+                    //var n = $('#SUB_CATEGORY_Error_Type').val();
+
+                    if ($("#ACCOUNT_NAME").val()=="" && $("#DOS").val()=="" && $("#CODER_LOGIN_ID").val()=="" && $("#QC_LOGIN_ID").val()=="" && $("#COMMENTS").val()=="" && $("#AUDITOR_NAME").val() =="" && $("#EMP_ID").val()=="0" && $("#EMP_NAME").val()=="" && $('#ddlclientid').val()=="" && $('#ACCOUNT_NO').val()=="" && $('#ddldenialid').val()=="" && $('#ddlerrorid').val()=="" && $('#SUB_CATEGORY_Error_Type').val()=="")
+                    {
+                        ErrorMessage("Enter Valid Data");
+                        $('#DENIAL_WORKED_DT').attr('disabled', 'disabled');
+                        $('#ACCOUNT_NAME').attr('disabled', 'disabled');
+                        $('#EMP_ID').attr('disabled', 'disabled');
+                        $('#EMP_NAME').attr('disabled', 'disabled');
+                        return false;
+                    }                
+                    
+                        $.ajax({
+                            url: '@Url.Action("ImportData")',
+                            cache: false,
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            dataType: 'JSON',
+                            beforeSend: function () {
+                            },
+                            success: function (data) {
+                                LoadImportInboxGrid();
+                                Clearsub();
+                                SuccessMessage("Data has been updated");
+                            },
+                            error: function (jXhr) {
+                                alert(jXhr);
+                            }
+                        });
+                        $('#DENIAL_WORKED_DT').attr('disabled', 'disabled');
+                        $('#ACCOUNT_NAME').attr('disabled', 'disabled');
+                        $('#EMP_ID').attr('disabled', 'disabled');
+                        $('#EMP_NAME').attr('disabled', 'disabled');
+                    
+                    
+                });
+
+                function LoadImportInboxGrid() {
+                    debugger;
+                    var PR = $("#ddlPractice option:selected").val();
+                    if (PR == 'Select') {
+                        ErrorMessage("Please Select Practice");
+                        return false;
+                    } 
+                        $.ajax({
+                            url: '@Url.Action("LoadImportInbox")',
+                            cache: false,
+                            type: 'GET',
+                            data: { Practice_Id: PR },
+                            dataType: 'html',
+                            beforeSend: function () {
+                            },
+                            success: function (data) {
+                                //alert('success');
+                                $('#ImportGridBind').first().html(data);
+                            },
+                            error: function (jXhr) {
+                                //alert(jXhr);
+                            }
+                        });
+                    
+                }
+
+
+                function LoadAccountName() {
+        debugger;
+        var CID = $("#ddlclientid option:selected").val();
+        if (CID == 'Select') {
+            //ErrorMessage("Please Select Client ID");
+            $("#ACCOUNT_NAME").val() == "";
+            return false;
+        }   
+            $.ajax({
+                url: '@Url.Action("LoadAccountName")',
+                dataType: 'json',
+                data: { CID: CID },
+                success: function (data) {                              
+                $("#ACCOUNT_NAME").empty();
+                $("#ACCOUNT_NAME").val(data);                
+                }
+            })
+    }
+
+
+                function denialtypeselect() {
+                    debugger;
+                    if ($('#ddldenialid').val() == 'OMEGA') {
+                        CallerrorSelectfunc();
+                        $('#ddlerrorid').removeAttr('disabled');
+                        $('#SUB_CATEGORY_Error_Type').removeAttr('disabled');
+                        $('#CODER_LOGIN_ID').removeAttr('disabled');
+                        $('#QC_LOGIN_ID').removeAttr('disabled');
+                        $('#AUDITOR_NAME').removeAttr('disabled');
+                    }
+                    else if ($('#ddldenialid').val() == 'Other')
+                    {
+                        $("#CODER_LOGIN_ID").val("");
+                        $("#QC_LOGIN_ID").val("");
+                        $("#AUDITOR_NAME").val("");
+                        $("#EMP_ID").val("");
+                        $("#EMP_NAME").val("");
+                        $('#ddlerrorid').prop('selectedIndex', 0);
+                        CallerrorSelectfunc();
+                        CallerrorChangefunc();
+                        //$('#ddlerrorid').attr('disabled', 'disabled');
+                        $('#ddlerrorid').removeAttr('disabled');
+                        $('#SUB_CATEGORY_Error_Type').attr('disabled', 'disabled');
+                        $('#CODER_LOGIN_ID').attr('disabled', 'disabled');
+                        $('#QC_LOGIN_ID').attr('disabled', 'disabled');
+                        $('#AUDITOR_NAME').attr('disabled', 'disabled');
+                    }
+                    else {
+                        $('#ddlerrorid').attr('disabled', 'disabled');
+                        $('#SUB_CATEGORY_Error_Type').attr('disabled', 'disabled');
+                        $('#CODER_LOGIN_ID').attr('disabled', 'disabled');
+                        $('#QC_LOGIN_ID').attr('disabled', 'disabled');
+                        $('#AUDITOR_NAME').attr('disabled', 'disabled');
+                       
+                        $("#CODER_LOGIN_ID").val("");
+                        $("#QC_LOGIN_ID").val("");                        
+                        $("#AUDITOR_NAME").val("");
+                        $("#EMP_ID").val("");
+                        $("#EMP_NAME").val("");                        
+                        $('#ddlerrorid').prop('selectedIndex', 0);
+                        CallerrorChangefunc();
+
+                    }
+    }
+
+                function CallerrorSelectfunc() {
+
+                    var errorId = $("#ddldenialid option:selected").val();
+
+                    $.ajax({
+                        url: '@Url.Action("ErrorCategorySelection")',
+                        dataType: 'json',
+                        data: { denialtype: errorId },
+                        success: function (data) {
+                            $("#ddlerrorid").empty();
+                            $("#ddlerrorid").append("<option value='0'>-- Select --</option>");
+                            $.each(data, function (index, optiondata) {
+                                $("#ddlerrorid").append("<option value='" + optiondata.Value + "'>" + optiondata.Text + "</option>");
+                            });
+                        }
+                    })
+
+
+                }
+
+
+                function CallerrorChangefunc() {
+                   
+                    var errorId = $("#ddlerrorid option:selected").val();              
+
+                    $.ajax({
+                        url: '@Url.Action("SubCategorySelection")',
+                        dataType: 'json',
+                        data: { errorId: errorId },
+                        success: function (data) {
+                            $("#SUB_CATEGORY_Error_Type").empty();
+                            $("#SUB_CATEGORY_Error_Type").append("<option value='0'>-- Select --</option>");
+                            $.each(data, function (index, optiondata) {
+                                $("#SUB_CATEGORY_Error_Type").append("<option value='" + optiondata.Value + "'>" + optiondata.Text + "</option>");
+                            });
+                        }
+                    })
+
+
+                }
+
+                function Clear() {
+                    debugger;
+                    $("#ACCOUNT_NAME").val("");
+                    $("#DOS").val("");
+                    //$("#DENIAL_WORKED_DT").val("");
+                    $("#CODER_LOGIN_ID").val("");
+                    $("#QC_LOGIN_ID").val("");
+                    $("#COMMENTS").val("");
+                    $("#AUDITOR_NAME").val("");
+                    $("#EMP_ID").val("");
+                    $("#EMP_NAME").val("");
+                    $('#ddlProject_Status').prop('selectedIndex', 0);
+                    $('#ddlclientid').prop('selectedIndex', 0);
+                    $('#ddlaccountno').prop('selectedIndex', 0);
+                    $('#ddlerrorid').prop('selectedIndex', 0);
+                    CallerrorChangefunc();;
+                    $('#ddldenialid').prop('selectedIndex', 0);
+                    $('#ddlPractice').prop('selectedIndex', 0);
+                    window.location.reload();                    
+                    //$('#home').load('/Admin/AdminIndex');
+
+
+                }
+
+
+                function Clearsub() {
+                    $("#DOS").val("");
+                    $("#CODER_LOGIN_ID").val("");
+                    $("#QC_LOGIN_ID").val("");
+                    $("#COMMENTS").val("");
+                    $("#AUDITOR_NAME").val("");
+                    $("#EMP_ID").val("");
+                    $("#EMP_NAME").val("");
+                    $('#ddlaccountno').prop('selectedIndex', 0);
+                    $('#ddlerrorid').prop('selectedIndex', 0);
+                    CallerrorChangefunc();
+                    $('#ddldenialid').prop('selectedIndex', 0);
+                    //$('#ddlPractice').prop('selectedIndex', 0);
+                }
+
+               
+                function onchangeevent() {
+                    debugger;
+                    var CODERID = $("#CODER_LOGIN_ID").val();
+                   
+                    $.ajax({
+                        url: '@Url.Action("LoadEMPName")',
+                        dataType: 'json',
+                        data: { CODER_LOGIN_ID: CODERID },
+                        success: function (data) {
+                            debugger;
+                            //alert(data);
+                            var str = data;
+                            var ret = str.split(" ");
+                            var str1 = ret[0];
+                            var str2 = ret[1];
+                            $('#EMP_ID').val(str1);
+                            $('#EMP_NAME').val(str2);
+                        },
+                        error: function (jXhr) {
+                           // alert('fail');
+                        }
+                    })                  
+                }
+
+            </script>
+
+
+<script type="text/javascript">
+    var specialKeys = new Array();
+    specialKeys.push(8); //Backspace
+    specialKeys.push(9); //Tab
+    specialKeys.push(46); //Delete
+    specialKeys.push(36); //Home
+    specialKeys.push(35); //End
+    specialKeys.push(37); //Left
+    specialKeys.push(39); //Right
+    specialKeys.push(47); ///
+
+    function IsDate(e) {
+       
+        //if (specialKeys.indexOf(e.keyCode) != -1)
+        //{
+        //    alert(specialKeys.indexOf(e.keyCode));
+        //    alert("OK")
+        //}
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+        //var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || (specialKeys.indexOf(e.keyCode) != -1 && e.charCode != e.keyCode));
+        //var ret = (specialKeys.indexOf(e.keyCode) != -1 && e.charCode != e.keyCode);
+       
+        if ((keyCode >= 48 && keyCode <= 57) || keyCode == 47)
+        {
+            return true;
+        }
+        else
+        {
+            ErrorMessage("only date formates are allowed");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        }
+        //if (ret==true)
+        //{
+
+        //}
+        //else
+        //{
+        //    ErrorMessage("Special Character not allowes");
+        //}
+       
+        //document.getElementById("error").style.display = ret ? "none" : "inline";
+        //return ret;
+       
+    }
+
+    function IsAlphaNumericonly(e) {       
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+       
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 32) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+            return true;
+        }
+        else {
+            ErrorMessage("Special Character not allowes");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        };
+    }
+    function IsNumericonly(e) {
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+        //alert(keyCode);
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 46)) {
+            return true;
+        }
+        else {
+            ErrorMessage("only Numbers are allowed");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        }
+    }
+
+    function IsAlpha(e) {        
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+       
+        if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)||( keyCode == 32)) {
+            return true;
+        }
+        else {
+            ErrorMessage("only Characters are allowed");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        }     
+    }
+
+    //$(document).keypress(function (e) {
+    //    if (e.which == 13) {
+    //        $("#btnSave").click();
+    //    }
+    //});
+
+</script>
+

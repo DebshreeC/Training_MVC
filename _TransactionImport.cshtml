@@ -1,0 +1,542 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { @id = "formTransactionAccount" }))
+{
+            <div class="modal fade bs-example-modal-lg in" tabindex="-1" role="dialog" aria-hidden="true" style="display: block; padding-right: 17px; background: rgba(0,0,0,0.3);" id="modaleditColumn">
+                <div class="modal-dialog modal-lg" style="width: 60%">
+                    @*<div class="modal-content" style="border-radius: 68px 150px 10px 150px; -moz-border-radius: 68px 150px 10px 150px; -webkit-border-radius: 68px 150px 10px 150px; border: 2px dotted #000000; ">*@
+                    <div class="modal-content" style="border: 2px dotted #000000; ">
+                        <div class="col-md-12 col-sm-12 col-lg-12">
+                            <div class="modal-header">
+                                <div class="col-md-8 col-sm-8 col-lg-8">
+                                    <h4 class="modal-title" id="myModalLabel" style="color:black;">Account Details</h4>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-lg-4">
+                                    <button type="button" tabindex="0" class="close" data-dismiss="modal" onclick="CloseModal()">
+                                        <span aria-hidden="true">X</span>
+                                    </button>
+                                </div>
+                            </div>
+                            @*<div class="col-md-1 col-sm-1 col-lg-1">
+                </div>*@
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12">
+                            <br /><br />
+                            @for (int i = 0; i <= Model.Columns.Count - 1; i++)
+                            {
+                                <div></div>
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "IMPORT_ID")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3" style="display:none">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3" style="display:none">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" readonly="readonly" />
+                                            @*@Html.ValidationMessageFor(model => model.DOS)*@
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "CLIENT_#")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input type="hidden" id="ddl_CLIENT_ID" value="@Model.Rows[0].ItemArray[i]" />
+                                            @Html.DropDownList("CLIENT_#", new SelectList(ViewBag.CLIENTID, "Text", "Value"), "-- Select --", new { @class = "form-control customeSelect", @id = "ddlclientid", @onchange = "LoadAccountName()", tabindex = 1 })
+                                            @*@Html.DropDownListFor(x => x.CLIENT_ID, new SelectList(@Model.CLIENT_ID, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlclientid" })*@
+                                            @*@Html.ValidationMessageFor(model => model.CLIENT_ID)*@
+
+                                        </div>
+                                    </div>
+                                }
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "ACCOUNT_NAME")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" readonly="readonly" disabled="disabled" tabindex=2 />
+                                            @*@Html.ValidationMessageFor(model => model.ACCOUNT_NAME)*@
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "DOS")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            @if (@Model.Rows[0].ItemArray[i].ToString() == "")
+                                            {
+                                                <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i].ToString()" class="form-control customeSelect" type="text" placeholder="mm/dd/yyyy" onkeypress="return IsDate(event);" tabindex=3 />
+                                            }
+                                            else
+                                            {
+                                                <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i].ToString().Substring(0, 10)" class="form-control customeSelect" type="text" placeholder="mm/dd/yyyy" onkeypress="return IsDate(event);" tabindex=3 />
+                                            }
+                                            @*@Html.ValidationMessageFor(model => model.DOS)*@
+                                        </div>
+                                    </div>
+                                }
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "ACCOUNT_NO")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input type="hidden" id="ddl_@Model.Columns[i].ColumnName.Replace(" ", "_")" value="@Model.Rows[0].ItemArray[i]" />
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" onkeypress="return IsNumericonly(event);" tabindex=4 />
+                                            @*@Html.DropDownList("ACCOUNT_NO", new SelectList(ViewBag.ACCOUNTNO, "Text", "Value"), "-- Select --", new { @class = "form-control customeSelect", @id = "ddlaccountno" })*@
+
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "DENIAL_WORKED_DATE")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i].ToString().Substring(0,10)" class="form-control customeSelect" type="text" readonly="readonly" disabled="disabled" tabindex=5 />
+                                            @*@Html.ValidationMessageFor(model => model.DENIAL_WORKED_DT)*@
+                                        </div>
+                                    </div>
+                                }
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "DENIAL_TYPE")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input type="hidden" id="ddl_@Model.Columns[i].ColumnName.Replace(" ", "_")" value="@Model.Rows[0].ItemArray[i]" />
+                                            @Html.DropDownList("DENIAL_TYPE", new List<SelectListItem>
+                                              {
+                                                  new SelectListItem() {Text = "Select", Value="Select"},
+                                                  new SelectListItem() { Text = "NON OMEGA", Value = "NON OMEGA"},
+                                                  new SelectListItem() { Text = "OMEGA", Value = "OMEGA"},
+                                                  new SelectListItem { Text = "Other", Value = "Other"},
+                                                }, new { @class = "form-control customeSelect", @id = "ddldenialid", @onchange = "denialtypeselect()", tabindex = 5 })
+                                            @*@Html.ValidationMessageFor(model => model.DENIAL_TYPE)*@
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "ERROR_CATEGORY")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input type="hidden" id="ddl_@Model.Columns[i].ColumnName.Replace(" ", "_")" value="@Model.Rows[0].ItemArray[i]" />
+                                            @Html.DropDownList("ERROR_CATEGORY", Enumerable.Empty<SelectListItem>(), "-- Select --", new { @class = "form-control customeSelect", @id = "ddlerrorid", @onchange = "CallerrorChangefunc()", tabindex = 6 })
+                                            @*@Html.ValidationMessageFor(model => model.ERROR_CATEGORY)*@
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "SUB_CATEGORY_ERROR_TYPE")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input type="hidden" id="ddl_@Model.Columns[i].ColumnName.Replace(" ", "_")" value="@Model.Rows[0].ItemArray[i]" />
+                                            @Html.DropDownList("SUB_CATEGORY_Error_Type", Enumerable.Empty<SelectListItem>(), "-- Select --", new { @class = "form-control customeSelect", @id = "ddlsubid", tabindex = 7 })
+                                            @*@Html.DropDownListFor(x => x.SUB_CATEGORY_Error_Type, new SelectList(@Model.SUBCATEGORYList, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlclientid" })*@
+                                        </div>
+                                    </div>
+                                }
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "CODER_LOGIN_ID")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" onchange="return onchangeevent()" onkeypress="return IsAlphaNumericonly(event);" tabindex=8 />
+                                            @*@Html.ValidationMessageFor(model => model.CODER_LOGIN_ID)*@
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "QC_LOGIN_ID")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" onkeypress="return IsAlphaNumericonly(event);" tabindex=9 />
+                                            @*@Html.ValidationMessageFor(model => model.QC_LOGIN_ID)*@
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "COMMENTS")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString() :</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <textarea id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") class="form-control customeSelect" onkeypress="return IsAlphaNumericonly(event);" tabindex=10>@Model.Rows[0].ItemArray[i]</textarea>
+                                            @*@Html.ValidationMessageFor(model => model.COMMENTS)*@
+                                        </div>
+                                    </div>
+                                }
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "AUDITOR_NAME")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" onkeypress="return IsAlpha(event);" tabindex=11 />
+                                            @*@Html.ValidationMessageFor(model => model.AUDITOR_NAME)*@
+                                        </div>
+                                    </div>
+                                }
+
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "EMP_ID")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" readonly="readonly" disabled="disabled" tabindex=12 />
+                                            @*@Html.ValidationMessageFor(model => model.EMP_ID)*@
+                                        </div>
+                                    </div>
+                                }
+                                if (@Model.Columns[i].ColumnName.ToString().Replace(" ", "_") == "EMP_NAME")
+                                {
+                                    <div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <label> @Model.Columns[i].ColumnName.ToString():</label>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-lg-3">
+                                            <input id=@Model.Columns[i].ColumnName.Replace(" ", "_") name=@Model.Columns[i].ColumnName.Replace(" ", "_") value="@Model.Rows[0].ItemArray[i]" class="form-control customeSelect" type="text" readonly="readonly" disabled="disabled" tabindex=13 />
+                                            @*@Html.ValidationMessageFor(model => model.EMP_NAME)*@
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                        <div class="modal-footer" style="text-align:center">
+                            <button type="submit" class="btn btn-primary" tabindex=14>Update</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CloseModal()" tabindex=15>Close</button>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+}
+
+
+
+<script>
+
+    function CloseModal() {
+        $('#modaleditColumn').css('display', 'none');
+    }
+
+    $('#formTransactionAccount').on('submit', function (event) {
+        debugger;
+        if (!confirm("Are you sure? Do you want to Update this account ?")) {
+
+            return false;
+        }
+        else {
+            if ($("#DOS").val() != "") {
+                var TodayDate = new Date();
+                var endDate = new Date(Date.parse($("#DOS").val()));
+                if (endDate == "Invalid Date") {
+                    ErrorMessage("Please Enter Valid Date");
+                    return false;
+                }
+                if (endDate > TodayDate) {
+                    ErrorMessage("DOS date should be less than today's date");
+                    return false;
+                }
+            }
+            event.preventDefault();
+            $.ajax({
+                url: '@Url.Action("UpdateTransaction")',
+                cache: false,
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'JSON',
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    CloseModal();
+                    SuccessMessage('Data has been updated');
+                    LoadcoderInboxGrid();
+                    Ajaxcall();
+                },
+                error: function (jXhr) {
+                    alert(jXhr);
+                }
+            });
+        }
+    }); 
+    //$(document).ready(function () {
+    //    debugger;
+    //    var date_input = $('input[name="DOS"]'); //our date input has the name "date"
+    //    var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+    //    var options = {
+    //        format: 'mm/dd/yyyy',
+    //        container: container,
+    //        todayHighlight: true,
+    //        autoclose: true,
+    //    };
+    //    date_input.datepicker(options);
+    //})
+    $(function () {
+
+        var hidclientvalue = $('#ddl_CLIENT_ID').val();
+        $('#ddlclientid').val(hidclientvalue);
+
+        var hidaccountvalue = $('#ddl_ACCOUNT_NO').val();
+        $('#ddlaccountno').val(hidaccountvalue);
+     
+        var hiderrorvalue = $('#ddl_ERROR_CATEGORY').val();        
+        $('#ddlerrorid').val(hiderrorvalue);
+
+        CallerrorChangefunc();
+
+        //var hidsubvalue = $('#ddl_SUB_CATEGORY_Error_Type').val();
+        //$('#ddlsubid').val(hidsubvalue);
+    
+        var hidvalue=$('#ddl_DENIAL_TYPE').val();
+        $('#ddldenialid').val(hidvalue);
+
+        denialtypeselect();
+
+        
+    });
+
+    function CallerrorSelectfunc() {
+
+        var errorId = $("#ddldenialid option:selected").val();
+
+        $.ajax({
+            url: '@Url.Action("ErrorCategorySelection")',
+            dataType: 'json',
+            data: { denialtype: errorId },
+            success: function (data) {
+                $("#ddlerrorid").empty();
+                $("#ddlerrorid").append("<option value='0'>-- Select --</option>");
+                $.each(data, function (index, optiondata) {
+                    $("#ddlerrorid").append("<option value='" + optiondata.Value + "'>" + optiondata.Text + "</option>");
+                });
+            }
+        })
+
+    }
+    function CallerrorChangefunc() {
+        debugger;
+        var errorId = $("#ddlerrorid option:selected").val();
+
+        $.ajax({
+            url: '@Url.Action("SubCategorySelection")',
+            dataType: 'json',
+            data: { errorId: errorId },
+            success: function (data) {
+                $("#ddlsubid").empty();
+                $("#ddlsubid").append("<option value='0'>-- Select --</option>");
+                $.each(data, function (index, optiondata) {
+                    $("#ddlsubid").append("<option value='" + optiondata.Value + "'>" + optiondata.Text + "</option>");
+                    var hidsubvalue = $('#ddl_SUB_CATEGORY_ERROR_TYPE').val();
+                    $('#ddlsubid').val(hidsubvalue);
+                    if ($('#ddlsubid').val() == hidsubvalue)
+                    {
+
+                    }
+                    else
+                    {
+                        $('#ddlsubid').prop('selectedIndex', 0);
+                    }
+                });
+            }
+        })
+    }
+
+    function denialtypeselect() {
+        if ($('#ddldenialid').val() == 'OMEGA') {
+            CallerrorSelectfunc();
+            $('#ddlerrorid').removeAttr('disabled');
+            $('#ddlsubid').removeAttr('disabled');
+            $('#CODER_LOGIN_ID').removeAttr('disabled');
+            $('#QC_LOGIN_ID').removeAttr('disabled');
+            $('#AUDITOR_NAME').removeAttr('disabled');
+        }
+        else if ($('#ddldenialid').val() == 'Other') {
+            $("#CODER_LOGIN_ID").val("");
+            $("#QC_LOGIN_ID").val("");
+            $("#AUDITOR_NAME").val("");
+            $("#EMP_ID").val("");
+            $("#EMP_NAME").val("");
+            $('#ddlerrorid').prop('selectedIndex', 0);
+            CallerrorSelectfunc();
+            CallerrorChangefunc();
+            //$('#ddlerrorid').attr('disabled', 'disabled');
+            $('#ddlerrorid').removeAttr('disabled');
+            $('#ddlsubid').attr('disabled', 'disabled');
+            $('#CODER_LOGIN_ID').attr('disabled', 'disabled');
+            $('#QC_LOGIN_ID').attr('disabled', 'disabled');
+            $('#AUDITOR_NAME').attr('disabled', 'disabled');
+        }
+        else {
+            $('#ddlerrorid').attr('disabled', 'disabled');
+            $('#ddlsubid').attr('disabled', 'disabled');
+            $('#CODER_LOGIN_ID').attr('disabled', 'disabled');
+            $('#QC_LOGIN_ID').attr('disabled', 'disabled');
+            $('#AUDITOR_NAME').attr('disabled', 'disabled');
+
+            $("#CODER_LOGIN_ID").val("");
+            $("#QC_LOGIN_ID").val("");
+            $("#AUDITOR_NAME").val("");
+            $("#EMP_ID").val("");
+            $("#EMP_NAME").val("");
+            $('#ddlerrorid').prop('selectedIndex', 0);
+            CallerrorChangefunc();
+
+        }
+    }
+
+
+    function LoadAccountName() {
+        debugger;
+        var CID = $("#ddlclientid option:selected").val();
+        if (CID == 'Select') {
+            ErrorMessage("Please Select Practice");
+            return false;
+        }
+        $.ajax({
+            url: '@Url.Action("LoadAccountName")',
+            dataType: 'json',
+            data: { CID: CID },
+            success: function (data) {
+                $("#ACCOUNT_NAME").empty();
+                $("#ACCOUNT_NAME").val(data);
+            }
+        })
+    }
+
+    function onchangeevent() {
+        debugger;
+        var CODERID = $("#CODER_LOGIN_ID").val();
+
+        $.ajax({
+            url: '@Url.Action("LoadEMPName")',
+            dataType: 'json',
+            data: { CODER_LOGIN_ID: CODERID },
+            success: function (data) {
+                debugger;
+                //alert(data);
+                var str = data;
+                var ret = str.split(" ");
+                var str1 = ret[0];
+                var str2 = ret[1];
+                $('#EMP_ID').val(str1);
+                $('#EMP_NAME').val(str2);
+            },
+            error: function (jXhr) {
+                // alert('fail');
+            }
+        })
+    }
+
+</script>
+
+<script type="text/javascript">
+    var specialKeys = new Array();
+    specialKeys.push(8); //Backspace
+    specialKeys.push(9); //Tab
+    specialKeys.push(46); //Delete
+    specialKeys.push(36); //Home
+    specialKeys.push(35); //End
+    specialKeys.push(37); //Left
+    specialKeys.push(39); //Right
+    specialKeys.push(47); ///
+
+    function IsDate(e) {
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+       
+        if ((keyCode >= 48 && keyCode <= 57) || keyCode == 47) {
+            return true;
+        }
+        else {
+            ErrorMessage("only date formates are allowed");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        }       
+    }
+
+    function IsAlphaNumericonly(e) {
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 32) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+            return true;
+        }
+        else {
+            ErrorMessage("Special Character not allowes");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        };
+    }
+
+
+    function IsAlpha(e) {
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+
+        if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || (keyCode == 32)) {
+            return true;
+        }
+        else {
+            ErrorMessage("only Characters are allowed");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        }
+    }
+
+    function IsNumericonly(e) {
+        var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 46)) {
+            return true;
+        }
+        else {
+            ErrorMessage("only Numbers are allowed");
+            if (e.preventDefault)
+                e.preventDefault();
+            e.returnValue = false;
+            return false;
+        }
+    }
+
+</script>

@@ -1,0 +1,141 @@
+﻿
+@model Denial_Coding.BAL.ViewModels.ReportsViewModel
+@{    
+   // Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "ProductionReport" }))
+{
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Data Filter</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li style="float:right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-md-2 col-sm-2 col-lg-2">
+                        <label>Practice</label>
+                        @Html.DropDownListFor(x => Model.SelectedPractice, new SelectList(@Model.PracticeList, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlPractice" })
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2">
+                        <label id="lblFromDOS">From Date</label>
+                        <input type="text" class="form-control has-feedback-left active form-control" id="txtFromDate" />
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2">
+                        <label id="lblToDOS">To Date</label>
+                        <input type="text" class="form-control has-feedback-left active form-control" id="txtToDate" onchange="return LoadBatchNames();" />
+                    </div>                   
+                    <div class="col-md-2 col-sm-2 col-lg-2">
+                        <label>Client</label>
+                        @Html.DropDownListFor(x => Model.SelectedClient, new SelectList(@Model.ClientList, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlClient" })
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2">
+                        <label>Denial Type</label>
+                        @Html.DropDownList("DENIAL_TYPE", new List<SelectListItem>
+                                        { new SelectListItem { Text = "NON OMEGA", Value = "NON OMEGA"},
+                                            new SelectListItem { Text = "OMEGA", Value = "OMEGA"},
+                                            new SelectListItem { Text = "Other", Value = "Other"},
+                                        }, "--Select--", new { @class = "form-control", @id = "ddldenialid", tabindex = "@(++tabindex)" })
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2">
+                        <label>Status</label>
+                        @Html.DropDownListFor(x => Model.SeletedCodingStatus, new SelectList(@Model.CodingStatusList, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlStatus" })
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2">
+                        <label>Coder</label>
+                       @Html.DropDownListFor(x => Model.SeletedCoder, new SelectList(@Model.CoderList, "Value", "Text"), "-- Select --", new { @class = "form-control", @id = "ddlCoder" })
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2 col-lg-2">
+                            <button type="button" class="btn btn-primary" accesskey="S" style="margin-top:9%" id="btnSubmit" onclick="return loadReportData()">Submit</button>
+                            <button type="button" class="btn btn-info" id="btnExport" style=" margin-top:9%; display:none" onclick="SubmittingExportbtn()">Export</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div id="bindReportBatchCount">
+    </div>*@
+
+    <div class="col-md-12 col-sm-12 col-xs-12" id="divCPTDetails">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Report Summary</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li style="float:right">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+
+            <div class="x_content">
+
+                <div id="bindReportBatchData">
+                </div>
+                <div style="overflow-x:scroll" id="bindReportData">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+
+    $(function () {
+        CustumDatePicker('txtFromDate');
+        $('#txtToDate').daterangepicker({
+            singleDatePicker: true,
+            calender_style: "picker_1"
+        }, function (start, end, label) {
+            
+            //GetStatus();
+        });
+    })
+
+    function SubmittingExportbtn() {       
+        var url = '@Url.Action("ProductionReportExport")';
+        window.location.href = url;
+    }
+
+    function loadReportData() {
+        debugger;
+        if ($('#ddlPractice option:selected').text() == '-- Select --') {
+            ErrorMessage('Please select "Practice" !!');
+            return false;
+        }
+        
+        else {
+            $.ajax({
+                url: '@Url.Action("GetReportDetails")',
+                cache: false,
+                type: 'GET',
+                dataType: 'html',
+                data: { fromDos: $('#txtFromDate').val(), toDos: $('#txtToDate').val(), Practice: $("#ddlPractice option:selected").val(), Client: $("#ddlClient option:selected").text(), Denial: $("#ddldenialid option:selected").text(), Status: $("#ddlStatus option:selected").text(), Coder: $("#ddlCoder option:selected").text() },
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $('#bindReportData').first().html(data);
+                    //loadBatchCount();
+                    //loadBatchDetails();
+
+                    $('#btnExport').show();
+                },
+                error: function (jXhr) {
+                }
+            });
+        }
+    }
+
+
+
+</script>

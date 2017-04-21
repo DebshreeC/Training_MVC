@@ -1,0 +1,156 @@
+﻿@using Denial_Coding.BAL.Generics
+
+
+<div class="row tile_count"> 
+    <div id="total">
+        <div>Total Status</div>
+        <div class="animated flipInY col-md-1 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-user"></i> Fresh Total</span>
+                @if (Session["Fresh"] != null)
+             {
+                    <div class="count"> @Session["Fresh"]</div>
+             }
+             else
+             {
+                    <div class="count">0</div>
+             }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+        <div class="animated flipInY col-md-2 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-clock-o"></i> Coding Allotted Total</span>
+                @if (Session["Allotted"] != null)
+             {
+                    <div class="count"> @Session["Allotted"]</div>
+             }
+             else
+             {
+                    <div class="count">0</div>
+             }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+        <div class="animated flipInY col-md-2 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-user"></i> Coding Completed Total</span>
+                @if (Session["Coded"] != null)
+             {
+                    <div class="count"> @Session["Coded"]</div>
+             }
+             else
+             {
+                    <div class="count">0</div>
+             }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+        <div class="animated flipInY col-md-2 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-user"></i> Completed</span>
+                @if (Session["Completed"] != null)
+             {
+                    <div class="count"> @Session["Completed"]</div>
+             }
+             else
+             {
+                    <div class="count">0</div>
+             }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+    </div> 
+    <div id="today">
+        <div>Today's Status</div>
+        <div class="animated flipInY col-md-1 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-user"></i> Fresh </span>
+                @if (Session["Fresh_Today"] != null)
+            {
+                    <div class="count green"> @Session["Fresh_Today"]</div>
+            }
+            else
+            {
+                    <div class="count">0</div>
+            }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+        <div class="animated flipInY col-md-2 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-clock-o"></i> Coding Allotted </span>
+                @if (Session["Allotted_Today"] != null)
+{
+                    <div class="count green"> @Session["Allotted_Today"]</div>
+}
+else
+{
+                    <div class="count">0</div>
+            }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+        <div class="animated flipInY col-md-2 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-user"></i> Coding Completed  </span>
+                @if (Session["Coded_Today"] != null)
+{
+                    <div class="count green"> @Session["Coded_Today"]</div>
+}
+else
+{
+                    <div class="count">0</div>
+            }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+        <div class="animated flipInY col-md-2 col-sm-2 col-xs-2 tile_stats_count">
+            <div class="left"></div>
+            <div class="right">
+                <span class="count_top"><i class="fa fa-user"></i> Released </span>
+                @if (Session["Completed_Today"] != null)
+{
+                    <div class="count green"> @Session["Completed_Today"]</div>
+}
+else
+{
+                    <div class="count">0</div>
+            }
+
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
+            </div>
+        </div>
+    </div> 
+</div>
+
+<script>
+    var AccessID =@HttpContext.Current.Session[Constants.AccessID]
+        $(function () {  
+            if(AccessID==2)
+            {
+                document.getElementById('total').style.display = 'none';
+            }
+            else if (AccessID == 1) {
+                document.getElementById('total').style.display = 'none';
+            }
+            else
+            {
+
+            }
+        });
+</script>
