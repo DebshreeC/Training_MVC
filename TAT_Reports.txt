@@ -1,0 +1,51 @@
+USE [CBI_Perimeter]
+GO
+/****** Object:  StoredProcedure [dbo].[usp_TAT_Report]    Script Date: 7/7/2017 4:24:48 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[usp_TAT_Report]  --exec [dbo].[usp_TAT_Report] 'Rasmitas','16','2/1/2017','2/24/2017'
+   (@Userntlg varchar (100), 
+    @project_id int,
+	@fromdate datetime,
+    @todate datetime
+   )           
+  
+as begin
+
+if OBJECT_ID('tempdb..##tempnew1')is not null
+drop table ##tempnew1
+select  ROW_NUMBER() OVER (ORDER BY (SELECT 100)) AS SNO, batch_name, count(*) as [No. Of Charts Processed]
+--from tbl_IMPORT_TABLE  GROUP BY batch_name
+--y.[No. Of Accounts]
+,CONVERT(VARCHAR(10),RECEIVED_DATE,111) as [RECEIVED_DATE],CONVERT(VARCHAR(10),tbl_IMPORT_TABLE.DOS,111) AS DOS
+,x.[No. Of Charts Received]
+,CONVERT(VARCHAR(10), tbl_TRANSACTION.CODED_DATE,111) AS CODED_DATE
+--into ##tempnew1
+from tbl_IMPORT_TABLE 
+
+INNER JOIN tbl_TRANSACTION ON tbl_IMPORT_TABLE.BATCH_ID = tbl_TRANSACTION.BATCH_ID
+outer apply dbo.funGetProcessedAccounts (tbl_import_table.BATCH_NAME) AS x
+group by batch_name,CONVERT(VARCHAR(10),RECEIVED_DATE,111),CONVERT(VARCHAR(10),tbl_IMPORT_TABLE.DOS,111)
+,[No. Of Charts Received],CONVERT(VARCHAR(10), tbl_TRANSACTION.CODED_DATE,111)
+
+end 
+------------------------------------------------------------------------------------------------------------------------------
+
+USE [CBI_Perimeter]
+GO
+/****** Object:  UserDefinedFunction [dbo].[funGetProcessedAccounts]    Script Date: 7/7/2017 4:25:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER FUNCTION [dbo].[funGetProcessedAccounts]
+(
+	@BATCH_NAME varchar(max)
+)
+RETURNS TABLE
+AS
+RETURN	
+select COUNT(tbl_IMPORT_TABLE.BATCH_ID) AS [No. Of Charts Received] 
+FROM tbl_IMPORT_TABLE where BATCH_NAME=@BATCH_NAME  
